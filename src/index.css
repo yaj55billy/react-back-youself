@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.title {
+  @apply text-gray-900 font-bold;
+}
+
+.text {
+  @apply text-gray-600 font-normal;
+}
