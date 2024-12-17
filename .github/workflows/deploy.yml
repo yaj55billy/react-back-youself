@@ -30,22 +30,22 @@ jobs:
       - name: Set base path in vite.config.js
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            sed -i 's|base: .*|base: "/project/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week2" ]; then
-            sed -i 's|base: .*|base: "/project/week2/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week2/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week3" ]; then
-            sed -i 's|base: .*|base: "/project/week3/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week3/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week4" ]; then
-            sed -i 's|base: .*|base: "/project/week4/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week4/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week5" ]; then
-            sed -i 's|base: .*|base: "/project/week5/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week5/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week6" ]; then
-            sed -i 's|base: .*|base: "/project/week6/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week6/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
-            sed -i 's|base: .*|base: "/project/week7/",|' vite.config.js
+            sed -i 's|base: .*|base: "/react-back-youself/week7/",|' vite.config.js
           fi
 
-      - name: Build project
+      - name: Build react-back-youself
         run: npm run build
 
       - name: Deploy to GitHub Pages
