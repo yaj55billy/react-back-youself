@@ -28,22 +28,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create .env file
+      - name: Set base path in vite.config.js
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "VITE_BASE_PATH=/project/" > .env
+            sed -i 's|base: .*|base: "/project/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week2" ]; then
-            echo "VITE_BASE_PATH=/project/week2/" > .env
+            sed -i 's|base: .*|base: "/project/week2/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week3" ]; then
-            echo "VITE_BASE_PATH=/project/week3/" > .env
+            sed -i 's|base: .*|base: "/project/week3/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week4" ]; then
-            echo "VITE_BASE_PATH=/project/week4/" > .env
+            sed -i 's|base: .*|base: "/project/week4/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week5" ]; then
-            echo "VITE_BASE_PATH=/project/week5/" > .env
+            sed -i 's|base: .*|base: "/project/week5/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week6" ]; then
-            echo "VITE_BASE_PATH=/project/week6/" > .env
+            sed -i 's|base: .*|base: "/project/week6/",|' vite.config.js
           elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
-            echo "VITE_BASE_PATH=/project/week7/" > .env
+            sed -i 's|base: .*|base: "/project/week7/",|' vite.config.js
           fi
 
       - name: Build project
