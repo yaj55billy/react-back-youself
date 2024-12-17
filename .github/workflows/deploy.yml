@@ -23,27 +23,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'  # 或者 '20'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Set environment variable
+      - name: Create .env file
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "VITE_BASE_PATH=/project/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week2" ]; then
-            echo "VITE_BASE_PATH=/project/week2/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week2/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week3" ]; then
-            echo "VITE_BASE_PATH=/project/week3/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week3/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week4" ]; then
-            echo "VITE_BASE_PATH=/project/week4/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week4/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week5" ]; then
-            echo "VITE_BASE_PATH=/project/week5/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week5/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week6" ]; then
-            echo "VITE_BASE_PATH=/project/week6/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week6/" > .env
           elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
-            echo "VITE_BASE_PATH=/project/week7/" >> $GITHUB_ENV
+            echo "VITE_BASE_PATH=/project/week7/" > .env
           fi
 
       - name: Build project
