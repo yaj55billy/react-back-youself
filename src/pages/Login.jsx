@@ -12,7 +12,7 @@ const Login = ({ formData, setFormData, signIn }) => {
 			<div className="sm:mx-auto sm:w-full sm:max-w-md">
 				<div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 					<h2 className="text-center text-3xl title mb-8">
-						請先登入
+						請先登入 Week3
 					</h2>
 					<form className="space-y-6" onSubmit={ signIn }>
 						<div>

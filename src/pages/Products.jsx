@@ -6,7 +6,7 @@ const Products = ({products, tempProduct, setTempProduct }) => {
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-2xl title mb-4">產品列表</h2>
+          <h2 className="text-2xl title mb-4">產品列表 Week3</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
