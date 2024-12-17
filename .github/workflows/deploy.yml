@@ -10,6 +10,7 @@ on:
       - week5
       - week6
       - week7
+      # 添加更多分支
 
 jobs:
   deploy:
@@ -22,12 +23,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20' 
+          node-version: '20'  # 或者 '20'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
+      - name: Set environment variable
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "VITE_BASE_PATH=/project/" >> $GITHUB_ENV
@@ -44,7 +45,9 @@ jobs:
           elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
             echo "VITE_BASE_PATH=/project/week7/" >> $GITHUB_ENV
           fi
-          npm run build
+
+      - name: Build project
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
