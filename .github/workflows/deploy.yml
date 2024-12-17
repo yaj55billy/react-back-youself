@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - week2
+      - week3
+      - week4
+      - week5
+      - week6
+      - week7
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20' 
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "VITE_BASE_PATH=/project/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week2" ]; then
+            echo "VITE_BASE_PATH=/project/week2/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week3" ]; then
+            echo "VITE_BASE_PATH=/project/week3/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week4" ]; then
+            echo "VITE_BASE_PATH=/project/week4/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week5" ]; then
+            echo "VITE_BASE_PATH=/project/week5/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week6" ]; then
+            echo "VITE_BASE_PATH=/project/week6/" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
+            echo "VITE_BASE_PATH=/project/week7/" >> $GITHUB_ENV
+          fi
+          npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ github.ref_name }}
