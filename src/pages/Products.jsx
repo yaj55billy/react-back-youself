@@ -1,88 +1,126 @@
-
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import ProductModal from '../components/ProductModal.jsx';
+import DeleteConfirmModal from '../components/DeleteConfirmModal.jsx';
 
-const Products = ({products, tempProduct, setTempProduct }) => {  
+
+const Products = ({ products }) => {  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('create');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleOpenModal = (mode, product = null) => {
+    setIsModalOpen(true);
+    setModalMode(mode);
+    console.log(product);
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null); 
+  };
+
+  const handleSubmit = (data) => {
+    console.log('Form submitted:', data);
+    // 這裡處理表單提交邏輯 API
+  };
+
+  const handleOpenDeleteModal = (product) => {
+    setIsDeleteModalOpen(true);
+    setSelectedProduct(product);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting product:', selectedProduct);
+    // 這裡處理刪除邏輯
+    handleCloseDeleteModal();
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl title mb-4">產品列表 Week3</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-md text uppercase">產品名稱</th>
-                  <th className="px-6 py-3 text-left text-md text uppercase">原價</th>
-                  <th className="px-6 py-3 text-left text-md text uppercase">售價</th>
-                  <th className="px-6 py-3 text-left text-md text uppercase">是否啟用</th>
-                  <th className="px-6 py-3 text-left text-md text uppercase">查看細節</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-6 py-4">{item.title}</td>
-                    <td className="px-6 py-4">{item.origin_price}</td>
-                    <td className="px-6 py-4">{item.price}</td>
-                    <td className="px-6 py-4">
-                      {item.is_enabled ? <span className='text-primary'>已啟用</span> : <span className='text-red-500'>未啟用</span>}
-                    </td>
-                    <td className="px-6 py-4">
-                      <button 
-                        onClick={() => setTempProduct(item)} 
-                        className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md"
-                      >
-                        查看細節
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div className="p-6 min-h-screen bg-gray-100">
+			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+				<h2 className="text-2xl title">產品列表</h2>
+        <button type='button' className='px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto text-center' onClick={() => handleOpenModal('create')}>建立新的產品</button>
+			</div>
 
-        <div>
-          <h2 className="text-2xl title mb-4">單一產品細節</h2>
-          {tempProduct ? (
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img src={tempProduct.imageUrl} className="w-full h-64 object-cover" alt="主圖" />
-              <div className="p-6">
-                <h5 className="text-xl font-bold mb-2">
-                  {tempProduct.title}
-                  <span className="ml-2 px-2 py-1 text-sm text-white bg-primary rounded-full">{tempProduct.category}</span>
-                </h5>
-                <p className="text mb-2">商品描述：{tempProduct.description}</p>
-                <p className="text mb-4">商品內容：{tempProduct.content}</p>
-                <div className="flex items-center gap-2 mb-6">
-                  <p className="text line-through">{tempProduct.origin_price}</p>
-                  <p className="text-xl font-bold text-primary">{tempProduct.price} 元</p>
-                </div>
-                <h5 className="font-bold mb-3">更多圖片：</h5>
-                <div className="grid grid-cols-2 gap-4">
-                  {
-                    tempProduct.imagesUrl.map((image, index) => {
-                      return (
-                        <img key={image + index} src={image} className="w-full h-32 object-cover rounded-md" alt="其他圖片" />
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text text-center p-8 bg-gray-50 rounded-lg">請選擇一個商品查看</p>
-          )}
-        </div>
-      </div>
-    </div>
+			{/* 產品列表 */}
+			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+				{products.map((product) => (
+					<div
+						key={product.id}
+						className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
+					>
+						<div className="flex items-center justify-between mb-3">
+							<span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+								{product.category}
+							</span>
+							<span
+								className={`px-3 py-1 rounded-full text-sm font-medium ${
+									product.is_enabled
+										? "bg-green-100 text-green-800"
+										: "bg-red-100 text-red-800"
+								}`}
+							>
+								{product.is_enabled ? "啟用" : "未啟用"}
+							</span>
+						</div>
+
+						<h3 className="text-lg title mb-4">
+							{product.title}
+						</h3>
+
+						<div className="space-y-2 mb-4">
+							<div className="flex items-center justify-between">
+								<span className="text-gray-600">原價</span>
+								<span className="text-gray-600 line-through">
+									NT$ {product.origin_price.toLocaleString()}
+								</span>
+							</div>
+							<div className="flex items-center justify-between">
+								<span className="text-gray-600">售價</span>
+								<span className="text-primary font-medium">
+									NT$ {product.price.toLocaleString()}
+								</span>
+							</div>
+						</div>
+
+						<div className="flex items-center justify-end space-x-2 pt-3 border-t border-gray-100">
+							<button type='button' className="px-3 py-1.5 font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors" onClick={() => handleOpenModal('edit', product)}>
+								編輯
+							</button>
+							<button type='button' className="px-3 py-1.5 font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors" onClick={() => handleOpenDeleteModal(product)}>
+								刪除
+							</button>
+						</div>
+					</div>
+				))}
+			</div>
+      <ProductModal
+        isOpen={isModalOpen}
+        mode={modalMode}
+        onClose={handleCloseModal}
+        selectedData={selectedProduct}
+      />
+      {/* onSubmit={handleSubmit} */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleDelete}
+        productTitle={selectedProduct?.title || ''}
+      />
+		</div>
   ) 
 }
 
 Products.propTypes = {
   products: PropTypes.array.isRequired,
-  tempProduct: PropTypes.object,
-  setTempProduct: PropTypes.func.isRequired,
 };
 
 export default Products;
