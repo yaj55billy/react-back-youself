@@ -2,25 +2,21 @@ import { useState, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { X } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { useImageManagement } from '../hooks/useImageManagement';
+import axios from 'axios';
+
+
+const API_BASE = "https://ec-course-api.hexschool.io/v2";
+const API_PATH = "hexschool-billyji";
 
 const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
-  const {
-    images,
-    mainImage,
-    imageUrl,
-    setImageUrl,
-    handleAddImage,
-    handleRemoveImage,
-    handleSetMainImage,
-    handlePaste,
-    handleKeyPress
-  } = useImageManagement(selectedData?.imageUrl, selectedData?.imagesUrl);
-
+  // console.log('ProductModal rendered');
+  
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors }
   } = useForm({
     defaultValues: {
@@ -32,37 +28,67 @@ const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
       description: selectedData?.description || '',
       content: selectedData?.content || '',
       is_enabled: selectedData?.is_enabled || false,
+      imageUrl: selectedData?.imageUrl || '',
+      imagesUrl: selectedData?.imagesUrl || [],
     },
     mode: 'onTouched',
   });
 
-  const onSubmit = (data) => {
-    const finalData = {
-      ...data,
-      imageUrl: mainImage,
-      imagesUrl: images,
-    };
-    console.log(finalData);
+  const images = watch('imagesUrl');
+  const mainImage = watch('imageUrl');
+  const [imageUrl, setImageUrl] = useState('');
+
+  const handleAddImage = () => {
+    if (imageUrl && images.length < 5) {
+      const newImages = [...images, imageUrl];
+      setValue('imagesUrl', newImages);
+      if (!mainImage) setValue('imageUrl', imageUrl);
+      setImageUrl('');
+    }
+  };
+
+  const handleRemoveImage = (url) => {
+    if (url === mainImage) {
+      const remainingImages = images.filter(img => img !== url);
+      setValue('imageUrl', remainingImages[0] || '');
+    }
+    setValue('imagesUrl', images.filter(img => img !== url));
+  };
+
+  const handleSetMainImage = (url) => {
+    setValue('imageUrl', url);
+  };
+
+  const onSubmit = async(data) => {
+
+    data.origin_price = Number(data.origin_price);
+    data.price = Number(data.price);
+
+    try {
+      if (mode === 'create') {
+        await axios.post(`${API_BASE}/api/${API_PATH}/admin/product`, { data });
+      } else if (mode === 'edit') {
+        const id = selectedData.id;
+        await axios.put(`${API_BASE}/api/${API_PATH}/admin/product/${id}`, { data });
+      }
+      onClose(); // 關閉 Modal
+      window.location.reload();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   useEffect(() => {
-    // 開啟時重置表單資料（一個是編輯，另一個是新增的話）
     if (isOpen) {
-      reset(selectedData || {
-        title: '',
-        category: '',
-        unit: '',
-        origin_price: '',
-        price: '',
-        description: '',
-        content: '',
-        is_enabled: false,
-      }); 
+      reset({
+        ...selectedData,
+        imagesUrl: selectedData?.imagesUrl || [],
+        imageUrl: selectedData?.imageUrl || '',
+      });
     }
   }, [isOpen, selectedData, reset]);
 
   const handleClose = () => {
-    // 關閉時重置表單資料
     reset({
       title: '',
       category: '',
@@ -72,18 +98,19 @@ const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
       description: '',
       content: '',
       is_enabled: false,
-    }); // 重置表單資料為空
+      imageUrl: '',
+      imagesUrl: [],
+    });
+    console.log('close');
+    
     onClose();
   };
 
   if (!isOpen) return null;
-
-
+  
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    {/* onClick={onClose} */}
-    {/* onClick={e => e.stopPropagation()} */}
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" >
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
@@ -118,7 +145,6 @@ const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
                   </button>
                 </div>
               )}
-              
 
               {/* 圖片網址輸入 */}
               <div className="space-y-2">
@@ -131,8 +157,6 @@ const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
                       type="url"
                       value={imageUrl}
                       onChange={(e) => setImageUrl(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      onPaste={handlePaste}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                       placeholder="請輸入或貼上圖片網址"
                     />
@@ -181,7 +205,6 @@ const ProductModal = ({ isOpen, onClose, mode, selectedData }) => {
               <input
                 type="text"
                 name="title"
-                value={selectedData?.title}
                 id='title'
                 {...register('title', {required: {
                   value: true,

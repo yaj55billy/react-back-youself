@@ -9,30 +9,29 @@ import Products from './pages/Products.jsx';
   主色系 primary：'#3A5A80'
   'primary-light': '#4B6B91',
   'primary-dark': '#294867',
+  border-gray-300
+  bg-red-500
+  hover:bg-red-600
  */
 
 const API_BASE = "https://ec-course-api.hexschool.io/v2";
 const API_PATH = "hexschool-billyji";
 
 const App = () => {
-  const [isAuth, setisAuth] = useState(false);
+  // console.log('渲染與分隔線 -----------');
+
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const [products, setProducts] = useState([]);
-  const [tempProduct, setTempProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
-  const getProducts = () => {
-    axios.get(`${API_BASE}/api/${API_PATH}/admin/products`)
-      .then(function (response) {
-        setProducts(response.data.products);
-      })
-      .catch(function (error) {
-        console.error(error.response.data.message);
-      });
+  const getProducts = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/products`);
+      setProducts(response.data.products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
   };
 
   const signOut = () => {
@@ -40,7 +39,7 @@ const App = () => {
       .then(function () {
         document.cookie = `hexToken=;expires=`;
         alert('您已登出！');
-        setisAuth(false);
+        setIsAuth(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -55,47 +54,58 @@ const App = () => {
   const signIn = async (event) => {
     event.preventDefault();
     setLoading(true);
-    axios.post(`${API_BASE}/admin/signin`, formData)
-      .then(function (response) {
-        const { token, expired } = response.data;
-        document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-        axios.defaults.headers.common.Authorization = `${token}`;
-
-        getProducts();
-        setisAuth(true);
-      })
-      .catch(function () {
-        alert("登入失敗，請再檢查一下帳密唷");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
-  const checkAuth = () => {    
-    axios.post(`${API_BASE}/api/user/check`)
-      .then(function () {
-        getProducts();
-        setisAuth(true);
-      })
-      .catch(function (error) {
-        setisAuth(false);
-        console.log(error.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const response = await axios.post(`${API_BASE}/admin/signin`, formData);
+      const { token, expired } = response.data;
+      document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+      axios.defaults.headers.common.Authorization = `${token}`;
+      await getProducts();
+      setIsAuth(true);
+    } catch {
+      alert("登入失敗，請再檢查一下帳密唷");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
+
+  const checkAuth = async () => {
+    setLoading(true);
+    try {
+      await axios.post(`${API_BASE}/api/user/check`);
+      await getProducts();
+      setIsAuth(true);
+    } catch {
+      setIsAuth(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {    
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
       "$1"
     );
     axios.defaults.headers.common.Authorization = `${token}`;
-
     checkAuth();
   }, []);
+
+    // // 觀察 loading 狀態的變化
+    // useEffect(() => {
+    //   console.log('Loading state changed:', loading);
+    // }, [loading]);
+  
+    // // 觀察 isAuth 狀態的變化
+    // useEffect(() => {
+    //   console.log('isAuth state changed:', isAuth);
+    // }, [isAuth]);
+  
+    // // 觀察 products 狀態的變化
+    // useEffect(() => {
+    //   console.log('Products state changed:', products);
+    // }, [products]);
+
 
   if (loading) {
     return (
@@ -111,7 +121,7 @@ const App = () => {
   return (
     <>
       {
-        isAuth ? <><button type='button' className='text-xl p-3' onClick={signOut}>登出按鈕（測試）</button><Products products={products} tempProduct={tempProduct} setTempProduct={setTempProduct}/></> : <Login formData={formData} setFormData={setFormData} signIn={signIn}/>
+        isAuth ? <><button type='button' className='text-xl p-3' onClick={signOut}>登出按鈕（測試）</button><Products products={products} /></> : <Login formData={formData} setFormData={setFormData} signIn={signIn}/>
       }
     </>
   )

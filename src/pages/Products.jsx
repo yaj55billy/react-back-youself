@@ -2,9 +2,14 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import ProductModal from '../components/ProductModal.jsx';
 import DeleteConfirmModal from '../components/DeleteConfirmModal.jsx';
+import axios from 'axios';
 
+const API_BASE = "https://ec-course-api.hexschool.io/v2";
+const API_PATH = "hexschool-billyji";
 
 const Products = ({ products }) => {  
+  // console.log('products 與分隔 -------');
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('create');
@@ -13,7 +18,6 @@ const Products = ({ products }) => {
   const handleOpenModal = (mode, product = null) => {
     setIsModalOpen(true);
     setModalMode(mode);
-    console.log(product);
     setSelectedProduct(product);
   };
 
@@ -27,6 +31,20 @@ const Products = ({ products }) => {
     // 這裡處理表單提交邏輯 API
   };
 
+
+    // useEffect(() => {
+    //   console.log('isModalOpen state changed:', isModalOpen);
+    // }, [isModalOpen]);
+  
+    // useEffect(() => {
+    //   console.log('modalMode state changed:', modalMode);
+    // }, [modalMode]);
+  
+    // useEffect(() => {
+    //   console.log('selectedProduct state changed:', selectedProduct);
+    // }, [selectedProduct]);
+
+
   const handleOpenDeleteModal = (product) => {
     setIsDeleteModalOpen(true);
     setSelectedProduct(product);
@@ -37,9 +55,16 @@ const Products = ({ products }) => {
     setSelectedProduct(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async(productId) => {
     console.log('Deleting product:', selectedProduct);
     // 這裡處理刪除邏輯
+
+    // try {
+    //   await axios.delete(`${API_BASE}/api/${API_PATH}/admin/product/${productId}`);
+    //   window.location.reload();
+    // } catch (error) {
+    //   console.error('Error submitting form:', error);
+    // }
     handleCloseDeleteModal();
   };
 
@@ -114,6 +139,7 @@ const Products = ({ products }) => {
         onClose={handleCloseDeleteModal}
         onConfirm={handleDelete}
         productTitle={selectedProduct?.title || ''}
+        productId={selectedProduct?.id || ''}
       />
 		</div>
   ) 
