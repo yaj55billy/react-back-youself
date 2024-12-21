@@ -38,7 +38,7 @@ const Products = ({ products, getProducts }) => {
 		try {
 			await axios.post(`${API_BASE}/api/${API_PATH}/admin/product`, { data });
 			await getProducts();
-			setIsModalOpen(false);
+			handleCloseModal();
 		} catch (error) {
 			console.error("Error creating product:", error);
 		}
@@ -51,7 +51,7 @@ const Products = ({ products, getProducts }) => {
 				data,
 			});
 			await getProducts();
-			setIsModalOpen(false);
+			handleCloseModal();
 		} catch (error) {
 			console.error("Error editing product:", error);
 		}
@@ -63,7 +63,7 @@ const Products = ({ products, getProducts }) => {
 				`${API_BASE}/api/${API_PATH}/admin/product/${productId}`
 			);
 			await getProducts();
-			setIsDeleteModalOpen(false);
+			handleCloseDeleteModal();
 		} catch (error) {
 			console.error("Error delete form:", error);
 		}

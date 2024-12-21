@@ -72,7 +72,7 @@ const ProductModal = ({
 			} else if (mode === "edit") {
 				await onEdit(data);
 			}
-			onClose(); // 關閉 Modal
+			handleClose();
 		} catch (error) {
 			console.error("Error submitting form:", error);
 		}
