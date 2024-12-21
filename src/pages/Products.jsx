@@ -1,78 +1,97 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import ProductModal from '../components/ProductModal.jsx';
-import DeleteConfirmModal from '../components/DeleteConfirmModal.jsx';
-import axios from 'axios';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import ProductModal from "../components/ProductModal.jsx";
+import DeleteConfirmModal from "../components/DeleteConfirmModal.jsx";
+import axios from "axios";
 
 const API_BASE = "https://ec-course-api.hexschool.io/v2";
 const API_PATH = "hexschool-billyji";
 
-const Products = ({ products }) => {  
-  // console.log('products 與分隔 -------');
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('create');
-  const [selectedProduct, setSelectedProduct] = useState(null);
+const Products = ({ products, getProducts }) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [modalMode, setModalMode] = useState("create");
+	const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const handleOpenModal = (mode, product = null) => {
-    setIsModalOpen(true);
-    setModalMode(mode);
-    setSelectedProduct(product);
-  };
+	const handleOpenModal = (mode, product = null) => {
+		setIsModalOpen(true);
+		setModalMode(mode);
+		setSelectedProduct(product);
+	};
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null); 
-  };
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		setSelectedProduct(null);
+	};
 
-  const handleSubmit = (data) => {
-    console.log('Form submitted:', data);
-    // 這裡處理表單提交邏輯 API
-  };
+	const handleOpenDeleteModal = (product) => {
+		setIsDeleteModalOpen(true);
+		setSelectedProduct(product);
+	};
 
+	const handleCloseDeleteModal = () => {
+		setIsDeleteModalOpen(false);
+		setSelectedProduct(null);
+	};
 
-    // useEffect(() => {
-    //   console.log('isModalOpen state changed:', isModalOpen);
-    // }, [isModalOpen]);
-  
-    // useEffect(() => {
-    //   console.log('modalMode state changed:', modalMode);
-    // }, [modalMode]);
-  
-    // useEffect(() => {
-    //   console.log('selectedProduct state changed:', selectedProduct);
-    // }, [selectedProduct]);
+	const handleCreateProduct = async (data) => {
+		try {
+			await axios.post(`${API_BASE}/api/${API_PATH}/admin/product`, { data });
+			await getProducts();
+			setIsModalOpen(false);
+		} catch (error) {
+			console.error("Error creating product:", error);
+		}
+	};
 
+	const handleEditProduct = async (data) => {
+		try {
+			const id = data.id;
+			await axios.put(`${API_BASE}/api/${API_PATH}/admin/product/${id}`, {
+				data,
+			});
+			await getProducts();
+			setIsModalOpen(false);
+		} catch (error) {
+			console.error("Error editing product:", error);
+		}
+	};
 
-  const handleOpenDeleteModal = (product) => {
-    setIsDeleteModalOpen(true);
-    setSelectedProduct(product);
-  };
+	const handleDeleteProduct = async (productId) => {
+		try {
+			await axios.delete(
+				`${API_BASE}/api/${API_PATH}/admin/product/${productId}`
+			);
+			await getProducts();
+			setIsDeleteModalOpen(false);
+		} catch (error) {
+			console.error("Error delete form:", error);
+		}
+	};
 
-  const handleCloseDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setSelectedProduct(null);
-  };
+	// useEffect(() => {
+	//   console.log('isModalOpen state changed:', isModalOpen);
+	// }, [isModalOpen]);
 
-  const handleDelete = async(productId) => {
-    console.log('Deleting product:', selectedProduct);
-    // 這裡處理刪除邏輯
+	// useEffect(() => {
+	//   console.log('modalMode state changed:', modalMode);
+	// }, [modalMode]);
 
-    // try {
-    //   await axios.delete(`${API_BASE}/api/${API_PATH}/admin/product/${productId}`);
-    //   window.location.reload();
-    // } catch (error) {
-    //   console.error('Error submitting form:', error);
-    // }
-    handleCloseDeleteModal();
-  };
+	// useEffect(() => {
+	//   console.log('selectedProduct state changed:', selectedProduct);
+	// }, [selectedProduct]);
 
-  return (
-    <div className="p-6 min-h-screen bg-gray-100">
+	return (
+		<div className="p-6 min-h-screen bg-gray-100">
 			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
 				<h2 className="text-2xl title">產品列表</h2>
-        <button type='button' className='px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto text-center' onClick={() => handleOpenModal('create')}>建立新的產品</button>
+				<button
+					type="button"
+					className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto text-center"
+					onClick={() => handleOpenModal("create")}
+				>
+					建立新的產品
+				</button>
 			</div>
 
 			{/* 產品列表 */}
@@ -97,9 +116,7 @@ const Products = ({ products }) => {
 							</span>
 						</div>
 
-						<h3 className="text-lg title mb-4">
-							{product.title}
-						</h3>
+						<h3 className="text-lg title mb-4">{product.title}</h3>
 
 						<div className="space-y-2 mb-4">
 							<div className="flex items-center justify-between">
@@ -117,36 +134,45 @@ const Products = ({ products }) => {
 						</div>
 
 						<div className="flex items-center justify-end space-x-2 pt-3 border-t border-gray-100">
-							<button type='button' className="px-3 py-1.5 font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors" onClick={() => handleOpenModal('edit', product)}>
+							<button
+								type="button"
+								className="px-3 py-1.5 font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors"
+								onClick={() => handleOpenModal("edit", product)}
+							>
 								編輯
 							</button>
-							<button type='button' className="px-3 py-1.5 font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors" onClick={() => handleOpenDeleteModal(product)}>
+							<button
+								type="button"
+								className="px-3 py-1.5 font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+								onClick={() => handleOpenDeleteModal(product)}
+							>
 								刪除
 							</button>
 						</div>
 					</div>
 				))}
 			</div>
-      <ProductModal
-        isOpen={isModalOpen}
-        mode={modalMode}
-        onClose={handleCloseModal}
-        selectedData={selectedProduct}
-      />
-      {/* onSubmit={handleSubmit} */}
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleDelete}
-        productTitle={selectedProduct?.title || ''}
-        productId={selectedProduct?.id || ''}
-      />
+			<ProductModal
+				isOpen={isModalOpen}
+				mode={modalMode}
+				onClose={handleCloseModal}
+				selectedData={selectedProduct}
+				onCreate={handleCreateProduct}
+				onEdit={handleEditProduct}
+			/>
+			<DeleteConfirmModal
+				isOpen={isDeleteModalOpen}
+				onClose={handleCloseDeleteModal}
+				productTitle={selectedProduct?.title || ""}
+				onDelete={() => handleDeleteProduct(selectedProduct?.id)}
+			/>
 		</div>
-  ) 
-}
+	);
+};
 
 Products.propTypes = {
-  products: PropTypes.array.isRequired,
+	products: PropTypes.array.isRequired,
+	getProducts: PropTypes.func.isRequired,
 };
 
 export default Products;
