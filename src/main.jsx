@@ -4,11 +4,11 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 
-const basename = import.meta.env.VITE_BASE_PATH || "/";
+const basename = "/react-back-youself/week4/";
 
 createRoot(document.getElementById("root")).render(
 	// <StrictMode>
-	<BrowserRouter basename={basename}>
+	<BrowserRouter basename={basename ? basename : "/"}>
 		<App />
 	</BrowserRouter>
 	// </StrictMode>,

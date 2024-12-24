@@ -3,8 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig(() => {
 	return {
-		// base: "/react-back-yourself/",
-		base: import.meta.env.VITE_BASE_PATH || "/",
+		base: "/react-back-youself/",
 		plugins: [react()],
 	};
 });
