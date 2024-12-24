@@ -27,22 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set base path in vite.config.js
+      - name: Set BASE_PATH
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/",|' vite.config.js
-          elif [ "${{ github.ref }}" == "refs/heads/week2" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week2/",|' vite.config.js
-          elif [ "${{ github.ref }}" == "refs/heads/week3" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week3/",|' vite.config.js
+          if [ "${{ github.ref }}" == "refs/heads/week3" ]; then
+            echo "VITE_BASE_PATH=/react-back-youself/week3/" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/week4" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week4/",|' vite.config.js
+            echo "VITE_BASE_PATH=/react-back-youself/week4/" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/week5" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week5/",|' vite.config.js
+            echo "VITE_BASE_PATH=/react-back-youself/week5/" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/week6" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week6/",|' vite.config.js
+            echo "VITE_BASE_PATH=/react-back-youself/week6/" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/week7" ]; then
-            sed -i 's|base: .*|base: "/react-back-youself/week7/",|' vite.config.js
+            echo "VITE_BASE_PATH=/react-back-youself/week7/" >> $GITHUB_ENV
           fi
 
       - name: Build react-back-youself
