@@ -19,7 +19,6 @@ const Login = () => {
 			const expiryDate = new Date(expired).toUTCString();
 			document.cookie = `hexToken=${token};expires=${expiryDate};path=/;`;
 			apiAuth.defaults.headers.common.Authorization = `${token}`;
-			console.log("登入成功");
 			navigate("/admin/products");
 		} catch {
 			alert("登入失敗，請再檢查一下帳密唷");
@@ -31,10 +30,7 @@ const Login = () => {
 			<div className="sm:mx-auto sm:w-full sm:max-w-md">
 				<div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 					<div className="mb-6">
-						<Link
-							to="/"
-							className="flex items-center text-gray-600 hover:text-primary"
-						>
+						<Link to="/" className="flex items-center text hover:text-primary">
 							<ArrowLeft className="w-4 h-4 mr-2" />
 							回首頁
 						</Link>

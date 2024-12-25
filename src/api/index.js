@@ -79,9 +79,32 @@ export const authLogout = async () => {
 	return response.data;
 };
 
-export const authGetProducts = async () => {
+export const authGetProducts = async (page) => {
 	const response = await apiAuth.get(
-		`${API_BASE}/api/${API_PATH}/admin/products`
+		`${API_BASE}/api/${API_PATH}/admin/products?page=${page}`
 	);
-	return response.data.products;
+	return response.data;
+};
+
+export const authCreateProduct = async (data) => {
+	const response = await apiAuth.post(
+		`${API_BASE}/api/${API_PATH}/admin/product`,
+		{ data }
+	);
+	return response.data;
+};
+
+export const authEditProduct = async (data) => {
+	const response = await apiAuth.put(
+		`${API_BASE}/api/${API_PATH}/admin/product/${data.id}`,
+		{ data }
+	);
+	return response.data;
+};
+
+export const authDeleteProduct = async (productId) => {
+	const response = await apiAuth.delete(
+		`${API_BASE}/api/${API_PATH}/admin/product/${productId}`
+	);
+	return response.data;
 };

@@ -15,13 +15,10 @@ const Home = () => {
 							</Link>
 						</div>
 						<div className="flex items-center space-x-8">
-							<Link to="/login" className="text-gray-600 hover:text-primary">
+							<Link to="/login" className="text hover:text-primary">
 								後台登入
 							</Link>
-							<Link
-								to="/admin/products"
-								className="text-gray-600 hover:text-primary"
-							>
+							<Link to="/admin/products" className="text hover:text-primary">
 								後台產品頁
 							</Link>
 						</div>

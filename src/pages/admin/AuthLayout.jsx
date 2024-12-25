@@ -9,13 +9,11 @@ import {
 	// Tag,
 	// FileText,
 } from "lucide-react";
-import { apiAuth, authCheck, authLogout } from "../../api/index.js";
+import { apiAuth, authCheck, authLogout } from "@/api/index.js";
 
 const AuthLayout = () => {
-	console.log("AuthLayout");
-
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [isAuth, setIsAuth] = useState(true);
+	const [isAuth, setIsAuth] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -41,8 +39,7 @@ const AuthLayout = () => {
 			).toUTCString()};path=/;`;
 			setIsAuth(false);
 			navigate("/");
-		} catch (error) {
-			console.log("登出失敗", error);
+		} catch {
 			alert("發生了一些問題，需再嘗試或檢查");
 		}
 	};
@@ -53,10 +50,8 @@ const AuthLayout = () => {
 			"$1"
 		);
 
-		// 只有在 token 存在且不為空時才設置 header
 		if (token) {
 			apiAuth.defaults.headers.common.Authorization = token;
-			console.log("token:", token);
 			onCheckAuth();
 		} else {
 			setIsAuth(false);
@@ -67,7 +62,7 @@ const AuthLayout = () => {
 	return (
 		<div className="min-h-screen bg-gray-100">
 			{/* Header */}
-			<header className="bg-gray-900 text-white sticky top-0 z-30">
+			<header className="bg-gray-900 text-white sticky top-0 z-50">
 				<div className="px-4 py-3 flex items-center justify-between">
 					<div className="flex items-center">
 						<button
@@ -106,7 +101,7 @@ const AuthLayout = () => {
 				{/* Sidebar */}
 				<aside
 					className={`
-            fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-[calc(100vh-48px)]
+            fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:min-h-screen
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           `}
 				>

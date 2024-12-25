@@ -1,20 +1,21 @@
-import { useState } from "react";
-// import PropTypes from "prop-types";
-import ProductModal from "../../components/ProductModal.jsx";
-import DeleteConfirmModal from "../../components/DeleteConfirmModal.jsx";
-import axios from "axios";
-
-const API_BASE = "https://ec-course-api.hexschool.io/v2";
-const API_PATH = "hexschool-billyji";
+import { useState, useEffect } from "react";
+import ProductModal from "@/components/ProductModal.jsx";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal.jsx";
+import Pagination from "@/components/Pagination.jsx";
+import {
+	authGetProducts,
+	authCreateProduct,
+	authEditProduct,
+	authDeleteProduct,
+} from "@/api/index.js";
 
 const AuthProducts = () => {
-	console.log("進入後台產品頁面");
-
-	// { products, getProducts }
+	const [products, setProducts] = useState([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [modalMode, setModalMode] = useState("create");
 	const [selectedProduct, setSelectedProduct] = useState(null);
+	const [pagination, setPagination] = useState({});
 
 	const handleOpenModal = (mode, product = null) => {
 		setIsModalOpen(true);
@@ -37,9 +38,19 @@ const AuthProducts = () => {
 		setSelectedProduct(null);
 	};
 
+	const getProducts = async (page = 1) => {
+		try {
+			const data = await authGetProducts(page);
+			setProducts(data.products);
+			setPagination(data.pagination);
+		} catch (error) {
+			console.error("Error fetching products:", error);
+		}
+	};
+
 	const handleCreateProduct = async (data) => {
 		try {
-			await axios.post(`${API_BASE}/api/${API_PATH}/admin/product`, { data });
+			await authCreateProduct(data);
 			await getProducts();
 			handleCloseModal();
 		} catch (error) {
@@ -49,10 +60,7 @@ const AuthProducts = () => {
 
 	const handleEditProduct = async (data) => {
 		try {
-			const id = data.id;
-			await axios.put(`${API_BASE}/api/${API_PATH}/admin/product/${id}`, {
-				data,
-			});
+			await authEditProduct(data);
 			await getProducts();
 			handleCloseModal();
 		} catch (error) {
@@ -62,9 +70,7 @@ const AuthProducts = () => {
 
 	const handleDeleteProduct = async (productId) => {
 		try {
-			await axios.delete(
-				`${API_BASE}/api/${API_PATH}/admin/product/${productId}`
-			);
+			await authDeleteProduct(productId);
 			await getProducts();
 			handleCloseDeleteModal();
 		} catch (error) {
@@ -72,111 +78,99 @@ const AuthProducts = () => {
 		}
 	};
 
-	// useEffect(() => {
-	//   console.log('isModalOpen state changed:', isModalOpen);
-	// }, [isModalOpen]);
-
-	// useEffect(() => {
-	//   console.log('modalMode state changed:', modalMode);
-	// }, [modalMode]);
-
-	// useEffect(() => {
-	//   console.log('selectedProduct state changed:', selectedProduct);
-	// }, [selectedProduct]);
+	useEffect(() => {
+		getProducts();
+	}, []);
 
 	return (
-		<h2>後台產品</h2>
-		// <div className="p-6 min-h-screen bg-gray-100">
-		// 	<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-		// 		<h2 className="text-2xl title">產品列表</h2>
-		// 		<button
-		// 			type="button"
-		// 			className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto text-center"
-		// 			onClick={() => handleOpenModal("create")}
-		// 		>
-		// 			建立新的產品
-		// 		</button>
-		// 	</div>
+		<div className="p-6 min-h-screen bg-gray-100">
+			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+				<h2 className="text-2xl title">產品列表</h2>
+				<button
+					type="button"
+					className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto text-center"
+					onClick={() => handleOpenModal("create")}
+				>
+					建立新的產品
+				</button>
+			</div>
 
-		// 	{/* 產品列表 */}
-		// 	<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-		// 		{products.map((product) => (
-		// 			<div
-		// 				key={product.id}
-		// 				className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
-		// 			>
-		// 				<div className="flex items-center justify-between mb-3">
-		// 					<span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-		// 						{product.category}
-		// 					</span>
-		// 					<span
-		// 						className={`px-3 py-1 rounded-full text-sm font-medium ${
-		// 							product.is_enabled
-		// 								? "bg-green-100 text-green-800"
-		// 								: "bg-red-100 text-red-800"
-		// 						}`}
-		// 					>
-		// 						{product.is_enabled ? "啟用" : "未啟用"}
-		// 					</span>
-		// 				</div>
+			{/* 產品列表 */}
+			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+				{products.map((product) => (
+					<div
+						key={product.id}
+						className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
+					>
+						<div className="flex items-center justify-between mb-3">
+							<span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+								{product.category}
+							</span>
+							<span
+								className={`px-3 py-1 rounded-full text-sm font-medium ${
+									product.is_enabled
+										? "bg-green-100 text-green-800"
+										: "bg-red-100 text-red-800"
+								}`}
+							>
+								{product.is_enabled ? "啟用" : "未啟用"}
+							</span>
+						</div>
 
-		// 				<h3 className="text-lg title mb-4">{product.title}</h3>
+						<h3 className="text-lg title mb-4">{product.title}</h3>
 
-		// 				<div className="space-y-2 mb-4">
-		// 					<div className="flex items-center justify-between">
-		// 						<span className="text-gray-600">原價</span>
-		// 						<span className="text-gray-600 line-through">
-		// 							NT$ {product.origin_price.toLocaleString()}
-		// 						</span>
-		// 					</div>
-		// 					<div className="flex items-center justify-between">
-		// 						<span className="text-gray-600">售價</span>
-		// 						<span className="text-primary font-medium">
-		// 							NT$ {product.price.toLocaleString()}
-		// 						</span>
-		// 					</div>
-		// 				</div>
+						<div className="space-y-2 mb-4">
+							<div className="flex items-center justify-between">
+								<span className="text">原價</span>
+								<span className="text line-through">
+									NT$ {product.origin_price.toLocaleString()}
+								</span>
+							</div>
+							<div className="flex items-center justify-between">
+								<span className="text">售價</span>
+								<span className="text-primary font-medium">
+									NT$ {product.price.toLocaleString()}
+								</span>
+							</div>
+						</div>
 
-		// 				<div className="flex items-center justify-end space-x-2 pt-3 border-t border-gray-100">
-		// 					<button
-		// 						type="button"
-		// 						className="px-3 py-1.5 font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors"
-		// 						onClick={() => handleOpenModal("edit", product)}
-		// 					>
-		// 						編輯
-		// 					</button>
-		// 					<button
-		// 						type="button"
-		// 						className="px-3 py-1.5 font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-		// 						onClick={() => handleOpenDeleteModal(product)}
-		// 					>
-		// 						刪除
-		// 					</button>
-		// 				</div>
-		// 			</div>
-		// 		))}
-		// 	</div>
-		// 	<ProductModal
-		// 		isOpen={isModalOpen}
-		// 		mode={modalMode}
-		// 		onClose={handleCloseModal}
-		// 		selectedData={selectedProduct}
-		// 		onCreate={handleCreateProduct}
-		// 		onEdit={handleEditProduct}
-		// 	/>
-		// 	<DeleteConfirmModal
-		// 		isOpen={isDeleteModalOpen}
-		// 		onClose={handleCloseDeleteModal}
-		// 		productTitle={selectedProduct?.title || ""}
-		// 		onDelete={() => handleDeleteProduct(selectedProduct?.id)}
-		// 	/>
-		// </div>
+						<div className="flex items-center justify-end space-x-2 pt-3 border-t border-gray-100">
+							<button
+								type="button"
+								className="px-3 py-1.5 font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors"
+								onClick={() => handleOpenModal("edit", product)}
+							>
+								編輯
+							</button>
+							<button
+								type="button"
+								className="px-3 py-1.5 font-medium text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+								onClick={() => handleOpenDeleteModal(product)}
+							>
+								刪除
+							</button>
+						</div>
+					</div>
+				))}
+			</div>
+
+			<Pagination pagination={pagination} changePage={getProducts} />
+			<ProductModal
+				isOpen={isModalOpen}
+				mode={modalMode}
+				onClose={handleCloseModal}
+				selectedData={selectedProduct}
+				onCreate={handleCreateProduct}
+				onEdit={handleEditProduct}
+			/>
+			<DeleteConfirmModal
+				isOpen={isDeleteModalOpen}
+				onClose={handleCloseDeleteModal}
+				productTitle={selectedProduct?.title || ""}
+				onDelete={() => handleDeleteProduct(selectedProduct?.id)}
+			/>
+		</div>
 	);
 };
-
-// AuthProducts.propTypes = {
-// 	products: PropTypes.array.isRequired,
-// 	getProducts: PropTypes.func.isRequired,
-// };
 
 export default AuthProducts;

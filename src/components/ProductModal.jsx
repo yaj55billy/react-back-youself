@@ -21,12 +21,16 @@ const ProductModal = ({
 	} = useForm({
 		defaultValues: {
 			title: selectedData?.title || "",
+			numofPeople: selectedData?.numofPeople || "",
 			category: selectedData?.category || "",
 			unit: selectedData?.unit || "",
 			origin_price: selectedData?.origin_price || "",
 			price: selectedData?.price || "",
+			datetimeStart: selectedData?.datetimeStart || "",
+			datetimeEnd: selectedData?.datetimeEnd || "",
 			description: selectedData?.description || "",
 			content: selectedData?.content || "",
+			notice: selectedData?.notice || "",
 			is_enabled: selectedData?.is_enabled || false,
 			imageUrl: selectedData?.imageUrl || "",
 			imagesUrl: selectedData?.imagesUrl || [],
@@ -91,12 +95,16 @@ const ProductModal = ({
 	const handleClose = () => {
 		reset({
 			title: "",
+			numofPeople: "",
 			category: "",
 			unit: "",
 			origin_price: "",
 			price: "",
+			datetimeStart: "",
+			datetimeEnd: "",
 			description: "",
 			content: "",
+			notice: "",
 			is_enabled: false,
 			imageUrl: "",
 			imagesUrl: [],
@@ -196,35 +204,65 @@ const ProductModal = ({
 							)}
 						</div>
 
-						<div>
-							<label
-								className="block text-sm title text-gray-600 mb-1"
-								htmlFor="title"
-							>
-								標題
-							</label>
-							<input
-								type="text"
-								name="title"
-								id="title"
-								{...register("title", {
-									required: {
-										value: true,
-										message: "請輸入標題",
-									},
-								})}
-								className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-									errors.title
-										? "border-red-500 focus:ring-red-500 focus:border-red-500"
-										: ""
-								}`}
-								placeholder="請輸入標題"
-							/>
-							{errors.title && (
-								<p className="mt-1 text-sm text-red-500">
-									{errors?.title?.message}
-								</p>
-							)}
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label
+									className="block text-sm title text-gray-600 mb-1"
+									htmlFor="title"
+								>
+									標題
+								</label>
+								<input
+									type="text"
+									name="title"
+									id="title"
+									{...register("title", {
+										required: {
+											value: true,
+											message: "請輸入標題",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.title
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入標題"
+								/>
+								{errors.title && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.title?.message}
+									</p>
+								)}
+							</div>
+							<div>
+								<label
+									className="block text-sm title text-gray-600 mb-1"
+									htmlFor="numofPeople"
+								>
+									人數
+								</label>
+								<input
+									type="number"
+									name="numofPeople"
+									id="numofPeople"
+									{...register("numofPeople", {
+										required: "請輸入人數",
+										min: { value: 1, message: "人數不能少於1位～" },
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.numofPeople
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入人數"
+								/>
+								{errors.numofPeople && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.numofPeople?.message}
+									</p>
+								)}
+							</div>
 						</div>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -352,6 +390,70 @@ const ProductModal = ({
 							</div>
 						</div>
 
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label
+									className="block text-sm title text-gray-600 mb-1"
+									htmlFor="datetimeStart"
+								>
+									課程開始時間
+								</label>
+								<input
+									type="datetime-local"
+									name="datetimeStart"
+									id="datetimeStart"
+									{...register("datetimeStart", {
+										required: {
+											value: true,
+											message: "請選擇課程開始時間",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.datetimeStart
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+								/>
+								{errors.datetimeStart && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.datetimeStart?.message}
+									</p>
+								)}
+							</div>
+							<div>
+								<label
+									className="block text-sm title text-gray-600 mb-1"
+									htmlFor="datetimeEnd"
+								>
+									課程結束時間
+								</label>
+								<input
+									type="datetime-local"
+									name="datetimeEnd"
+									id="datetimeEnd"
+									{...register("datetimeEnd", {
+										required: {
+											value: true,
+											message: "請選擇課程結束時間",
+										},
+										validate: (value, formValues) =>
+											new Date(value) > new Date(formValues.datetimeStart) ||
+											"結束時間必須大於開始時間",
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.datetimeEnd
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+								/>
+								{errors.datetimeEnd && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.datetimeEnd?.message}
+									</p>
+								)}
+							</div>
+						</div>
+
 						<div>
 							<label
 								className="block text-sm title text-gray-600 mb-1"
@@ -410,6 +512,37 @@ const ProductModal = ({
 							{errors.content && (
 								<p className="mt-1 text-sm text-red-500">
 									{errors?.content?.message}
+								</p>
+							)}
+						</div>
+
+						<div>
+							<label
+								className="block text-sm title text-gray-600 mb-1"
+								htmlFor="notice"
+							>
+								注意事項
+							</label>
+							<textarea
+								name="notice"
+								id="notice"
+								{...register("notice", {
+									required: {
+										value: true,
+										message: "請輸入注意事項",
+									},
+								})}
+								className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+									errors.notice
+										? "border-red-500 focus:ring-red-500 focus:border-red-500"
+										: ""
+								}`}
+								placeholder="請輸入注意事項"
+								rows="3"
+							/>
+							{errors.notice && (
+								<p className="mt-1 text-sm text-red-500">
+									{errors?.notice?.message}
 								</p>
 							)}
 						</div>
