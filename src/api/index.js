@@ -79,6 +79,19 @@ export const authLogout = async () => {
 	return response.data;
 };
 
+export const authUploadImage = async (formData) => {
+	const response = await apiAuth.post(
+		`${API_BASE}/api/${API_PATH}/admin/upload`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+	return response.data;
+};
+
 export const authGetProducts = async (page) => {
 	const response = await apiAuth.get(
 		`${API_BASE}/api/${API_PATH}/admin/products?page=${page}`

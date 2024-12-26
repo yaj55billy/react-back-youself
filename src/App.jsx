@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import AuthLayout from "./pages/admin/AuthLayout.jsx";
 import AuthProducts from "./pages/admin/AuthProducts.jsx";
 import AuthOrders from "./pages/admin/AuthOrders.jsx";
+import AuthImageUpload from "./pages/admin/AuthImageUpload.jsx";
 
 /**
   一般內文：text-gray-600
@@ -18,16 +19,17 @@ import AuthOrders from "./pages/admin/AuthOrders.jsx";
 
 const App = () => {
 	return (
-		<BrowserRouter basename="/react-back-youself-week4">
+		<HashRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/admin" element={<AuthLayout />}>
 					<Route path="products" element={<AuthProducts />} />
 					<Route path="orders" element={<AuthOrders />} />
+					<Route path="uploadimage" element={<AuthImageUpload />}></Route>
 				</Route>
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 };
 

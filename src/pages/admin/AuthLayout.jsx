@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
 	Menu,
 	Package,
 	ShoppingCart,
 	LogOut,
 	X,
+	Image,
 	// Tag,
 	// FileText,
 } from "lucide-react";
@@ -14,12 +15,12 @@ import { apiAuth, authCheck, authLogout } from "@/api/index.js";
 const AuthLayout = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [isAuth, setIsAuth] = useState(false);
-	const location = useLocation();
+	// const location = useLocation();
 	const navigate = useNavigate();
 
-	const isActive = (path) => {
-		return location.pathname.startsWith(path);
-	};
+	// const isActive = (path) => {
+	// 	return location.pathname.startsWith(path);
+	// };
 
 	const onCheckAuth = async () => {
 		try {
@@ -115,38 +116,56 @@ const AuthLayout = () => {
 						</button>
 					</div>
 					<nav className="p-4 space-y-1">
-						<Link
+						<NavLink
 							to={`/admin/products`}
-							className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
-								isActive("/admin/products")
-									? "bg-primary text-white"
-									: "text-gray-700 hover:bg-gray-100"
-							}`}
+							className={({ isActive }) => {
+								return `flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
+									isActive
+										? "bg-primary text-white"
+										: "text-gray-700 hover:bg-gray-100"
+								}`;
+							}}
 							onClick={() => setIsSidebarOpen(false)}
 						>
 							<Package className="w-5 h-5 mr-3" />
 							產品列表
-						</Link>
-						<Link
+						</NavLink>
+						<NavLink
 							to={`/admin/orders`}
-							className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
-								isActive("/admin/orders")
-									? "bg-primary text-white"
-									: "text-gray-700 hover:bg-gray-100"
-							}`}
+							className={({ isActive }) => {
+								return `flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
+									isActive
+										? "bg-primary text-white"
+										: "text-gray-700 hover:bg-gray-100"
+								}`;
+							}}
 							onClick={() => setIsSidebarOpen(false)}
 						>
 							<ShoppingCart className="w-5 h-5 mr-3" />
 							訂單列表
-						</Link>
-						{/* <Link to={`/admin/coupons`}>
+						</NavLink>
+						<NavLink
+							to={`/admin/uploadimage`}
+							className={({ isActive }) => {
+								return `flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
+									isActive
+										? "bg-primary text-white"
+										: "text-gray-700 hover:bg-gray-100"
+								}`;
+							}}
+							onClick={() => setIsSidebarOpen(false)}
+						>
+							<Image className="w-5 h-5 mr-3" />
+							圖片上傳
+						</NavLink>
+						{/* <NavLink to={`/admin/coupons`}>
 							<Tag className="w-5 h-5 mr-3" />
 							優惠券列表
-						</Link>
-						<Link to={`/admin/articles`}>
+						</NavLink>
+						<NavLink to={`/admin/articles`}>
 							<FileText className="w-5 h-5 mr-3" />
 							文章列表
-						</Link> */}
+						</NavLink> */}
 					</nav>
 				</aside>
 
