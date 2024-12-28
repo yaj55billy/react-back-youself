@@ -140,17 +140,10 @@ export const createCart = async (data) => {
 	return response.data;
 };
 
-export const editCart = async (data) => {
-	// {
-	//   "data": {
-	//     "product_id": "-L9tH8jxVb2Ka_DYPwng",
-	//     "qty": 1
-	//   }
-	// }
-	const response = await api.put(
-		`${API_BASE}/api/${API_PATH}/cart/${data.id}`,
-		{ data }
-	);
+export const editCart = async (data, id) => {
+	const response = await api.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
+		data,
+	});
 	return response.data;
 };
 

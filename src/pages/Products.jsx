@@ -31,6 +31,8 @@ const Products = () => {
 	const onGetProducts = async (page = 1) => {
 		try {
 			const data = await getProducts(page);
+			console.log(data.products);
+
 			setProducts(data.products.slice(0, 9)); // 只取九筆資料
 		} catch (error) {
 			console.error("Error fetching products:", error);
@@ -41,7 +43,7 @@ const Products = () => {
 		try {
 			const result = await getCarts();
 			setCartItems(result.data);
-			console.log(result.data);
+			console.log(result.data.carts);
 		} catch (error) {
 			console.error("Error fetching carts:", error);
 		}
@@ -57,6 +59,19 @@ const Products = () => {
 			onGetCarts();
 		} catch (error) {
 			console.error("Error adding cart:", error);
+		}
+	};
+
+	const handleUpdateCart = async (product_id, num, itemId) => {
+		const data = {
+			product_id,
+			qty: num,
+		};
+		try {
+			await editCart(data, itemId);
+			onGetCarts();
+		} catch (error) {
+			console.error("Error updating cart:", error);
 		}
 	};
 
@@ -104,6 +119,7 @@ const Products = () => {
 							product={selectedProduct}
 							isOpen={isModalOpen}
 							onClose={handleCloseModal}
+							onAddCart={handleAddCart}
 						/>
 					)}
 
@@ -146,6 +162,7 @@ const Products = () => {
 											<CartItem
 												key={item.id}
 												item={item}
+												onUpdateCart={handleUpdateCart}
 												onDeleteCart={handleDeleteCart}
 											/>
 										))

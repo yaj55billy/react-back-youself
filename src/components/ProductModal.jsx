@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { X } from "lucide-react";
 import PropTypes from "prop-types";
+import { set } from "react-hook-form";
 
-const ProductModal = ({ product, isOpen, onClose }) => {
+const ProductModal = ({ product, isOpen, onClose, onAddCart }) => {
+	const [num, setNum] = useState(1);
+
 	if (!isOpen) return null;
 
 	return (
@@ -53,16 +57,23 @@ const ProductModal = ({ product, isOpen, onClose }) => {
 
 							<div className="flex items-center gap-4">
 								<div className="flex items-center border rounded">
-									<button type="button" className="px-3 py-1 text-xl">
-										-
-									</button>
-									<span className="px-3 py-1 border-x">1</span>
-									<button type="button" className="px-3 py-1 text-xl">
-										+
-									</button>
+									<input
+										type="number"
+										min="1"
+										defaultValue={num}
+										onChange={(e) => {
+											setNum(Number(e.target.value));
+										}}
+										className="px-2 py-1 border rounded text-center"
+									/>
 								</div>
 								<button
 									type="button"
+									onClick={() => {
+										onAddCart(product.id, num);
+										setNum(1);
+										onClose();
+									}}
 									className="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark"
 								>
 									加入購物車
@@ -80,6 +91,7 @@ ProductModal.propTypes = {
 	product: PropTypes.object.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
+	onAddCart: PropTypes.func.isRequired,
 };
 
 export default ProductModal;

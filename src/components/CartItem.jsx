@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const CartItem = ({ item, onDeleteCart }) => {
+const CartItem = ({ item, onUpdateCart, onDeleteCart }) => {
 	return (
 		<tr className="hover:bg-gray-50">
 			<td className="px-4 py-2">
@@ -29,10 +29,7 @@ const CartItem = ({ item, onDeleteCart }) => {
 						min="1"
 						value={item.qty}
 						onChange={(e) => {
-							const newQty = parseInt(e.target.value) || 1;
-							if (newQty >= 1) {
-								// Update quantity logic here
-							}
+							onUpdateCart(item.product_id, Number(e.target.value), item.id);
 						}}
 						className="px-2 py-1 border rounded text-center"
 					/>
@@ -45,6 +42,7 @@ const CartItem = ({ item, onDeleteCart }) => {
 
 CartItem.propTypes = {
 	item: PropTypes.object.isRequired,
+	onUpdateCart: PropTypes.func.isRequired,
 	onDeleteCart: PropTypes.func.isRequired,
 };
 
