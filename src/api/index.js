@@ -121,3 +121,45 @@ export const authDeleteProduct = async (productId) => {
 	);
 	return response.data;
 };
+
+export const getProducts = async (page) => {
+	const response = await api.get(
+		`${API_BASE}/api/${API_PATH}/products?page=${page}`
+	);
+	return response.data;
+};
+
+export const getCarts = async () => {
+	const response = await api.get(`${API_BASE}/api/${API_PATH}/cart`);
+	return response.data;
+	// carts、final_total...
+};
+
+export const createCart = async (data) => {
+	const response = await api.post(`${API_BASE}/api/${API_PATH}/cart`, { data });
+	return response.data;
+};
+
+export const editCart = async (data) => {
+	// {
+	//   "data": {
+	//     "product_id": "-L9tH8jxVb2Ka_DYPwng",
+	//     "qty": 1
+	//   }
+	// }
+	const response = await api.put(
+		`${API_BASE}/api/${API_PATH}/cart/${data.id}`,
+		{ data }
+	);
+	return response.data;
+};
+
+export const deleteCart = async (id) => {
+	const response = await api.delete(`${API_BASE}/api/${API_PATH}/cart/${id}`);
+	return response.data;
+};
+
+export const deleteAllCarts = async () => {
+	const response = await api.delete(`${API_BASE}/api/${API_PATH}/carts`);
+	return response.data;
+};

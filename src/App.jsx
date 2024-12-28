@@ -1,6 +1,7 @@
-import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
+import Products from "./pages/Products.jsx";
 import AuthLayout from "./pages/admin/AuthLayout.jsx";
 import AuthProducts from "./pages/admin/AuthProducts.jsx";
 import AuthOrders from "./pages/admin/AuthOrders.jsx";
@@ -22,6 +23,7 @@ const App = () => {
 		<HashRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/products" element={<Products />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/admin" element={<AuthLayout />}>
 					<Route path="products" element={<AuthProducts />} />

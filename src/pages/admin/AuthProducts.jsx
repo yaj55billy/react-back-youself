@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import ProductModal from "@/components/ProductModal.jsx";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal.jsx";
+import ProductModal from "@/components/admin/ProductModal.jsx";
+import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal.jsx";
 import Pagination from "@/components/Pagination.jsx";
 import {
 	authGetProducts,
