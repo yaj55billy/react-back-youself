@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
@@ -16,7 +17,27 @@ const Products = () => {
 	const [products, setProducts] = useState([]);
 	const [selectedProduct, setSelectedProduct] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [cartItems, setCartItems] = useState([]);
+	const [cartItems, setCartItems] = useState({});
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			name: "",
+			email: "",
+			phone: "",
+			address: "",
+			message: "",
+		},
+		mode: "onTouched",
+	});
+
+	const onSubmit = async (data) => {
+		console.log(data);
+	};
 
 	const handleViewMore = (product) => {
 		setIsModalOpen(true);
@@ -31,8 +52,6 @@ const Products = () => {
 	const onGetProducts = async (page = 1) => {
 		try {
 			const data = await getProducts(page);
-			console.log(data.products);
-
 			setProducts(data.products.slice(0, 9)); // 只取九筆資料
 		} catch (error) {
 			console.error("Error fetching products:", error);
@@ -43,7 +62,6 @@ const Products = () => {
 		try {
 			const result = await getCarts();
 			setCartItems(result.data);
-			console.log(result.data.carts);
 		} catch (error) {
 			console.error("Error fetching carts:", error);
 		}
@@ -78,7 +96,7 @@ const Products = () => {
 	const handleClearCart = async () => {
 		try {
 			await deleteAllCarts();
-			setCartItems([]);
+			setCartItems({ carts: [] });
 		} catch (error) {
 			console.error("Error clearing cart:", error);
 		}
@@ -179,6 +197,177 @@ const Products = () => {
 							</div>
 						)}
 					</div>
+
+					<form
+						className="bg-white rounded-lg shadow-sm p-6 mt-8"
+						onSubmit={handleSubmit(onSubmit)}
+					>
+						<div className="space-y-6">
+							{/* 收件人姓名 */}
+							<div>
+								<label
+									htmlFor="name"
+									className="block text-gray-600 text-sm font-medium mb-2"
+								>
+									收件人姓名
+								</label>
+								<input
+									type="text"
+									name="name"
+									id="name"
+									{...register("name", {
+										required: {
+											value: true,
+											message: "請輸入姓名",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.name
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入姓名"
+								/>
+								{errors.name && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.name?.message}
+									</p>
+								)}
+							</div>
+
+							{/* Email */}
+							<div>
+								<label
+									htmlFor="email"
+									className="block text-gray-600 text-sm font-medium mb-2"
+								>
+									Email
+								</label>
+								<input
+									type="email"
+									name="email"
+									id="email"
+									{...register("email", {
+										required: {
+											value: true,
+											message: "請輸入 Email",
+										},
+										pattern: {
+											value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+											message: "Email 格式不正確",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.email
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入 Email"
+								/>
+								{errors.email && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.email?.message}
+									</p>
+								)}
+							</div>
+
+							{/* 收件人電話 */}
+							<div>
+								<label
+									htmlFor="phone"
+									className="block text-gray-600 text-sm font-medium mb-2"
+								>
+									收件人電話
+								</label>
+								<input
+									type="tel"
+									name="phone"
+									id="phone"
+									{...register("phone", {
+										// 驗證 必填 超過八碼
+										required: {
+											value: true,
+											message: "請輸入電話",
+										},
+										minLength: {
+											value: 8,
+											message: "電話號碼需超過 8 碼",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.phone
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入電話"
+								/>
+								{errors.phone && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.phone?.message}
+									</p>
+								)}
+							</div>
+
+							{/* 收件人地址 */}
+							<div>
+								<label
+									htmlFor="address"
+									className="block text-gray-600 text-sm font-medium mb-2"
+								>
+									收件人地址
+								</label>
+								<input
+									type="text"
+									name="address"
+									id="address"
+									{...register("address", {
+										required: {
+											value: true,
+											message: "請輸入地址",
+										},
+									})}
+									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
+										errors.address
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
+									placeholder="請輸入地址"
+								/>
+								{errors.address && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.address?.message}
+									</p>
+								)}
+							</div>
+
+							{/* 留言 */}
+							<div>
+								<label
+									htmlFor="message"
+									className="block text-gray-600 text-sm font-medium mb-2"
+								>
+									留言
+								</label>
+								<textarea
+									id="message"
+									rows="4"
+									{...register("message")}
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+									placeholder="請輸入留言"
+								></textarea>
+							</div>
+
+							{/* 送出按鈕 */}
+							<div>
+								<button
+									type="submit"
+									className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
+								>
+									送出訂單
+								</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</>
