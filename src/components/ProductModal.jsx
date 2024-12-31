@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import PropTypes from "prop-types";
-import { set } from "react-hook-form";
+import { currency } from "@/utils/filter";
 
 const ProductModal = ({ product, isOpen, onClose, onAddCart }) => {
 	const [num, setNum] = useState(1);
@@ -48,10 +48,10 @@ const ProductModal = ({ product, isOpen, onClose, onAddCart }) => {
 						<div className="flex items-center justify-between">
 							<div>
 								<p className="text line-through">
-									原價：${product.origin_price}
+									原價：${currency(product.origin_price)}
 								</p>
 								<p className="text-xl font-bold text-red-600">
-									特價：${product.price}
+									特價：${currency(product.price)}
 								</p>
 							</div>
 

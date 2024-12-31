@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { currency } from "@/utils/filter";
 
 const CartItem = ({ item, onUpdateCart, onDeleteCart }) => {
 	return (
@@ -35,7 +36,9 @@ const CartItem = ({ item, onUpdateCart, onDeleteCart }) => {
 					/>
 				</div>
 			</td>
-			<td className="px-4 py-2 text-right font-medium">${item.final_total}</td>
+			<td className="px-4 py-2 text-right font-medium">
+				${currency(item.final_total)}
+			</td>
 		</tr>
 	);
 };

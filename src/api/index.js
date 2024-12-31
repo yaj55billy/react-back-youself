@@ -156,3 +156,12 @@ export const deleteAllCarts = async () => {
 	const response = await api.delete(`${API_BASE}/api/${API_PATH}/carts`);
 	return response.data;
 };
+
+// /v2/api/{api_path}/order
+
+export const createOrder = async (data) => {
+	const response = await api.post(`${API_BASE}/api/${API_PATH}/order`, {
+		data,
+	});
+	return response.data;
+};

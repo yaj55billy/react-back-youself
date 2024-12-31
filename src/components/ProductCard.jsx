@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { currency } from "@/utils/filter";
 
 const ProductCard = ({ product, onViewMore, onAddCart }) => {
 	return (
@@ -12,9 +13,11 @@ const ProductCard = ({ product, onViewMore, onAddCart }) => {
 				<h3 className="text-lg title mb-2">{product.title}</h3>
 				<div className="flex justify-between items-center mb-4">
 					<div>
-						<p className="text line-through">原價：${product.origin_price}</p>
+						<p className="text line-through">
+							原價：${currency(product.origin_price)}
+						</p>
 						<p className="text-xl font-bold text-red-600">
-							特價：${product.price}
+							特價：${currency(product.price)}
 						</p>
 					</div>
 				</div>

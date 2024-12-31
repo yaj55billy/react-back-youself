@@ -11,7 +11,9 @@ import {
 	editCart,
 	deleteCart,
 	deleteAllCarts,
+	createOrder,
 } from "@/api";
+import { currency } from "@/utils/filter";
 
 const Products = () => {
 	const [products, setProducts] = useState([]);
@@ -28,7 +30,7 @@ const Products = () => {
 		defaultValues: {
 			name: "",
 			email: "",
-			phone: "",
+			tel: "",
 			address: "",
 			message: "",
 		},
@@ -36,7 +38,20 @@ const Products = () => {
 	});
 
 	const onSubmit = async (data) => {
-		console.log(data);
+		const orderData = {
+			user: data,
+			message: data.message,
+		};
+
+		try {
+			const result = await createOrder(orderData);
+			console.log(result);
+			alert(result.message);
+			reset();
+			onGetCarts();
+		} catch (error) {
+			console.error("Error creating order:", error);
+		}
 	};
 
 	const handleViewMore = (product) => {
@@ -192,7 +207,9 @@ const Products = () => {
 						{cartItems?.carts?.length > 0 && (
 							<div className="mt-4">
 								<div className="flex justify-end items-center text-xl font-medium">
-									<span className="px-4">總計：${cartItems.final_total}</span>
+									<span className="px-4">
+										總計：${currency(cartItems.final_total)}
+									</span>
 								</div>
 							</div>
 						)}
@@ -205,10 +222,7 @@ const Products = () => {
 						<div className="space-y-6">
 							{/* 收件人姓名 */}
 							<div>
-								<label
-									htmlFor="name"
-									className="block text-gray-600 text-sm font-medium mb-2"
-								>
+								<label htmlFor="name" className="block text-sm text mb-2">
 									收件人姓名
 								</label>
 								<input
@@ -237,10 +251,7 @@ const Products = () => {
 
 							{/* Email */}
 							<div>
-								<label
-									htmlFor="email"
-									className="block text-gray-600 text-sm font-medium mb-2"
-								>
+								<label htmlFor="email" className="block text-sm text mb-2">
 									Email
 								</label>
 								<input
@@ -273,18 +284,14 @@ const Products = () => {
 
 							{/* 收件人電話 */}
 							<div>
-								<label
-									htmlFor="phone"
-									className="block text-gray-600 text-sm font-medium mb-2"
-								>
+								<label htmlFor="tel" className="block text-sm text mb-2">
 									收件人電話
 								</label>
 								<input
 									type="tel"
-									name="phone"
-									id="phone"
-									{...register("phone", {
-										// 驗證 必填 超過八碼
+									name="tel"
+									id="tel"
+									{...register("tel", {
 										required: {
 											value: true,
 											message: "請輸入電話",
@@ -293,27 +300,28 @@ const Products = () => {
 											value: 8,
 											message: "電話號碼需超過 8 碼",
 										},
+										pattern: {
+											value: /^\d+$/,
+											message: "電話號碼格式不正確，僅限數字。",
+										},
 									})}
 									className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary ${
-										errors.phone
+										errors.tel
 											? "border-red-500 focus:ring-red-500 focus:border-red-500"
 											: ""
 									}`}
 									placeholder="請輸入電話"
 								/>
-								{errors.phone && (
+								{errors.tel && (
 									<p className="mt-1 text-sm text-red-500">
-										{errors?.phone?.message}
+										{errors?.tel?.message}
 									</p>
 								)}
 							</div>
 
 							{/* 收件人地址 */}
 							<div>
-								<label
-									htmlFor="address"
-									className="block text-gray-600 text-sm font-medium mb-2"
-								>
+								<label htmlFor="address" className="block text-sm text mb-2">
 									收件人地址
 								</label>
 								<input
@@ -342,10 +350,7 @@ const Products = () => {
 
 							{/* 留言 */}
 							<div>
-								<label
-									htmlFor="message"
-									className="block text-gray-600 text-sm font-medium mb-2"
-								>
+								<label htmlFor="message" className="block text-sm text mb-2">
 									留言
 								</label>
 								<textarea
@@ -358,14 +363,14 @@ const Products = () => {
 							</div>
 
 							{/* 送出按鈕 */}
-							<div>
+							{cartItems?.carts?.length !== 0 && (
 								<button
 									type="submit"
 									className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
 								>
 									送出訂單
 								</button>
-							</div>
+							)}
 						</div>
 					</form>
 				</div>
