@@ -74,7 +74,7 @@ const ProductModal = ({ product, isOpen, onClose, onAddCart }) => {
 										setNum(1);
 										onClose();
 									}}
-									className="border border-primary text-primary px-6 py-2 rounded transition-colors hover:bg-primary hover:text-white"
+									className="text-center border border-primary text-primary px-6 py-2 rounded transition-colors hover:bg-primary hover:text-white"
 								>
 									加入購物車
 								</button>

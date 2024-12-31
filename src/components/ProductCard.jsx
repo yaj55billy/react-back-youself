@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
+import ReactLoading from "react-loading";
 import { currency } from "@/utils/filter";
 
-const ProductCard = ({ product, onViewMore, onAddCart }) => {
+const ProductCard = ({ product, onViewMore, onAddCart, loadingCartId }) => {
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 			<img
@@ -32,9 +33,19 @@ const ProductCard = ({ product, onViewMore, onAddCart }) => {
 					<button
 						type="button"
 						onClick={() => onAddCart(product.id, 1)}
-						className="flex-1 px-4 py-2 border border-primary text-primary rounded transition-colors hover:bg-primary hover:text-white "
+						disabled={loadingCartId === product.id}
+						className="flex flex-1 justify-center px-4 py-2 border border-primary text-primary rounded transition-colors hover:bg-primary hover:text-white "
 					>
-						加入購物車
+						{loadingCartId === product.id ? (
+							<ReactLoading
+								type="spin"
+								color="#3A5A80"
+								height={20}
+								width={20}
+							/>
+						) : (
+							"加入購物車"
+						)}
 					</button>
 				</div>
 			</div>
@@ -46,6 +57,7 @@ ProductCard.propTypes = {
 	product: PropTypes.object.isRequired,
 	onViewMore: PropTypes.func.isRequired,
 	onAddCart: PropTypes.func.isRequired,
+	loadingCartId: PropTypes.string,
 };
 
 export default ProductCard;

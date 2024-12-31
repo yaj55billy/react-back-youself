@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import ReactLoading from "react-loading";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
@@ -20,6 +21,8 @@ const Products = () => {
 	const [selectedProduct, setSelectedProduct] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [cartItems, setCartItems] = useState({});
+	const [loadingCartId, setLoadingCartId] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	const {
 		register,
@@ -38,6 +41,7 @@ const Products = () => {
 	});
 
 	const onSubmit = async (data) => {
+		setLoading(true);
 		const orderData = {
 			user: data,
 			message: data.message,
@@ -45,12 +49,13 @@ const Products = () => {
 
 		try {
 			const result = await createOrder(orderData);
-			console.log(result);
 			alert(result.message);
 			reset();
 			onGetCarts();
 		} catch (error) {
 			console.error("Error creating order:", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -79,10 +84,13 @@ const Products = () => {
 			setCartItems(result.data);
 		} catch (error) {
 			console.error("Error fetching carts:", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleAddCart = async (id, num = 1) => {
+		setLoadingCartId(id);
 		const data = {
 			product_id: id,
 			qty: num,
@@ -92,6 +100,8 @@ const Products = () => {
 			onGetCarts();
 		} catch (error) {
 			console.error("Error adding cart:", error);
+		} finally {
+			setLoadingCartId(null);
 		}
 	};
 
@@ -133,6 +143,11 @@ const Products = () => {
 
 	return (
 		<>
+			{loading && (
+				<div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+					<ReactLoading type="spin" color="#fafafa" height={50} width={50} />
+				</div>
+			)}
 			<Header />
 			<div className="min-h-screen bg-gray-50">
 				<div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -144,6 +159,7 @@ const Products = () => {
 								product={product}
 								onViewMore={handleViewMore}
 								onAddCart={handleAddCart}
+								loadingCartId={loadingCartId}
 							/>
 						))}
 					</div>
@@ -153,6 +169,7 @@ const Products = () => {
 							isOpen={isModalOpen}
 							onClose={handleCloseModal}
 							onAddCart={handleAddCart}
+							loadingCartId={loadingCartId}
 						/>
 					)}
 
