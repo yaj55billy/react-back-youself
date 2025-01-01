@@ -15,12 +15,7 @@ import { apiAuth, authCheck, authLogout } from "@/api/index.js";
 const AuthLayout = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [isAuth, setIsAuth] = useState(false);
-	// const location = useLocation();
 	const navigate = useNavigate();
-
-	// const isActive = (path) => {
-	// 	return location.pathname.startsWith(path);
-	// };
 
 	const onCheckAuth = async () => {
 		try {

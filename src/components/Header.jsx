@@ -1,4 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import {
+	ShoppingCart,
+	// Menu,
+	// X,
+	// User
+} from "lucide-react";
+
 const Header = () => {
 	return (
 		<header className="bg-whit border-b border-gray-300">
@@ -10,15 +17,50 @@ const Header = () => {
 						</Link>
 					</div>
 					<div className="flex items-center space-x-8">
-						<Link to="/products" className="text hover:text-primary">
-							前台產品頁
-						</Link>
-						<Link to="/login" className="text hover:text-primary">
-							後台登入
-						</Link>
-						<Link to="/admin/products" className="text hover:text-primary">
+						<NavLink
+							to="/about"
+							className={({ isActive }) => {
+								return `text-gray-600 hover:text-primary-dark ${
+									isActive && "text-primary-dark font-semibold"
+								}`;
+							}}
+						>
+							關於我們
+						</NavLink>
+						<NavLink
+							to="/products"
+							className={({ isActive }) => {
+								return `text-gray-600 hover:text-primary-dark ${
+									isActive && "text-primary-dark font-semibold"
+								}`;
+							}}
+						>
+							課程列表
+						</NavLink>
+						<NavLink
+							to="/cart"
+							className={({ isActive }) => {
+								return `text-gray-600 hover:text-primary-dark ${
+									isActive && "text-primary-dark font-semibold"
+								}`;
+							}}
+						>
+							<ShoppingCart className="w-6 h-6" />
+						</NavLink>
+
+						<NavLink
+							to="/login"
+							className={({ isActive }) => {
+								return `text-gray-600 hover:text-primary-dark ${
+									isActive && "text-primary-dark font-semibold"
+								}`;
+							}}
+						>
+							登入
+						</NavLink>
+						{/* <Link to="/admin/products" className="text hover:text-primary">
 							後台產品頁
-						</Link>
+						</Link> */}
 					</div>
 				</div>
 			</nav>

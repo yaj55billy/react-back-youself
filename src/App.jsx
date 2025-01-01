@@ -1,11 +1,5 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Products from "./pages/Products.jsx";
-import AuthLayout from "./pages/admin/AuthLayout.jsx";
-import AuthProducts from "./pages/admin/AuthProducts.jsx";
-import AuthOrders from "./pages/admin/AuthOrders.jsx";
-import AuthImageUpload from "./pages/admin/AuthImageUpload.jsx";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 
 /**
   一般內文：text-gray-600
@@ -19,20 +13,7 @@ import AuthImageUpload from "./pages/admin/AuthImageUpload.jsx";
  */
 
 const App = () => {
-	return (
-		<HashRouter>
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/products" element={<Products />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/admin" element={<AuthLayout />}>
-					<Route path="products" element={<AuthProducts />} />
-					<Route path="orders" element={<AuthOrders />} />
-					<Route path="uploadimage" element={<AuthImageUpload />}></Route>
-				</Route>
-			</Routes>
-		</HashRouter>
-	);
+	return <RouterProvider router={router} />;
 };
 
 export default App;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { apiAuth, authLogin } from "../api/index.js";
+import { apiAuth, authLogin } from "@/api/index.js";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ username: "", password: "" });
@@ -29,12 +29,6 @@ const Login = () => {
 		<div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div className="sm:mx-auto sm:w-full sm:max-w-md">
 				<div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-					<div className="mb-6">
-						<Link to="/" className="flex items-center text hover:text-primary">
-							<ArrowLeft className="w-4 h-4 mr-2" />
-							回首頁
-						</Link>
-					</div>
 					<h2 className="text-center text-3xl title mb-8">請先登入</h2>
 					<form className="space-y-6" onSubmit={signIn}>
 						<div>

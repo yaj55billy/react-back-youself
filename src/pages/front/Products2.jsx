@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ReactLoading from "react-loading";
-import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
 import CartItem from "@/components/CartItem";
@@ -16,7 +15,7 @@ import {
 } from "@/api";
 import { currency } from "@/utils/filter";
 
-const Products = () => {
+const Products2 = () => {
 	const [products, setProducts] = useState([]);
 	const [selectedProduct, setSelectedProduct] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -148,7 +147,6 @@ const Products = () => {
 					<ReactLoading type="spin" color="#fafafa" height={50} width={50} />
 				</div>
 			)}
-			<Header />
 			<div className="min-h-screen bg-gray-50">
 				<div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
 					<h1 className="text-3xl title mb-8">課程列表</h1>
@@ -396,4 +394,4 @@ const Products = () => {
 	);
 };
 
-export default Products;
+export default Products2;
