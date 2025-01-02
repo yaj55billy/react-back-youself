@@ -134,6 +134,11 @@ export const getAllProducts = async () => {
 	return response.data;
 };
 
+export const getSingleProduct = async (id) => {
+	const response = await api.get(`${API_BASE}/api/${API_PATH}/product/${id}`);
+	return response.data;
+};
+
 export const getCarts = async () => {
 	const response = await api.get(`${API_BASE}/api/${API_PATH}/cart`);
 	return response.data;

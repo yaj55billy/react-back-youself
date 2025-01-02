@@ -1,29 +1,49 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import ReactLoading from "react-loading";
 import HeroSection from "@/components/HeroSection";
 import ProductCard from "@/components/ProductCard";
 
-import {
-	// getProducts,
-	getAllProducts,
-	// getCarts,
-	createCart,
-} from "@/api";
+import { getAllProducts, createCart } from "@/api";
 
 const Products = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [products, setProducts] = useState([]);
 	const [loadingCartId, setLoadingCartId] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [categories, setCategories] = useState([]);
+	const [activeCategory, setActiveCategory] = useState("全部課程");
 
 	const onGetAllProducts = async () => {
 		try {
 			const data = await getAllProducts();
 			setProducts(data.products);
+
+			const uniqueCategories = [
+				"全部課程",
+				...new Set(data.products.map((p) => p.category)),
+			];
+			setCategories(uniqueCategories);
+
+			const categoryFromUrl = searchParams.get("category");
+			if (categoryFromUrl && uniqueCategories.includes(categoryFromUrl)) {
+				setActiveCategory(categoryFromUrl);
+			}
 		} catch (error) {
 			console.error("Error fetching products:", error);
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const handleCategoryChange = (category) => {
+		setActiveCategory(category);
+		if (category === "全部課程") {
+			searchParams.delete("category");
+		} else {
+			searchParams.set("category", category);
+		}
+		setSearchParams(searchParams);
 	};
 
 	const handleAddCart = async (id, num = 1) => {
@@ -40,6 +60,11 @@ const Products = () => {
 			setLoadingCartId(null);
 		}
 	};
+
+	const filteredProducts =
+		activeCategory === "全部課程"
+			? products
+			: products.filter((product) => product.category === activeCategory);
 
 	useEffect(() => {
 		onGetAllProducts();
@@ -59,8 +84,25 @@ const Products = () => {
 					title="課程列表"
 				/>
 				<div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+					<div className="flex flex-wrap gap-2 mb-6">
+						{categories.map((category) => (
+							<button
+								key={category}
+								type="button"
+								onClick={() => handleCategoryChange(category)}
+								className={`px-4 py-2 rounded-full transition-colors ${
+									activeCategory === category
+										? "bg-primary text-white"
+										: "bg-gray-100 hover:bg-gray-200 text-gray-700"
+								}`}
+							>
+								{category}
+							</button>
+						))}
+					</div>
+
 					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-						{products.map((product) => (
+						{filteredProducts.map((product) => (
 							<ProductCard
 								key={product.id}
 								product={product}

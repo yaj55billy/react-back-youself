@@ -7,6 +7,7 @@ import Home from "./pages/front/Home.jsx";
 import About from "./pages/front/About.jsx";
 import Login from "./pages/front/Login.jsx";
 import Products from "./pages/front/Products.jsx";
+import ProductDetail from "./pages/front/ProductDetail.jsx";
 import Cart from "./pages/front/Cart.jsx";
 
 import AuthProducts from "./pages/admin/AuthProducts.jsx";
@@ -31,6 +32,10 @@ export const router = createHashRouter([
 				element: <Products />,
 			},
 			{
+				path: "products/:id",
+				element: <ProductDetail />,
+			},
+			{
 				path: "cart",
 				element: <Cart />,
 			},
@@ -38,10 +43,6 @@ export const router = createHashRouter([
 				path: "login",
 				element: <Login />,
 			},
-			// {
-			//   path: "products/:id",
-			//   element: <SingleProduct />,
-			// },
 		],
 	},
 	{

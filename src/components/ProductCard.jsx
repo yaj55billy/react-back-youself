@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import ReactLoading from "react-loading";
 import { currency } from "@/utils/filter";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product, onAddCart, loadingCartId }) => {
 	return (
-		<div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+		<div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
 			<img
 				src={product.imageUrl}
 				alt={product.title}
@@ -29,7 +30,7 @@ const ProductCard = ({ product, onAddCart, loadingCartId }) => {
 							onAddCart(product.id, 1);
 						}}
 						disabled={loadingCartId === product.id}
-						className="px-4 py-2 border border-primary text-primary rounded transition-colors hover:bg-primary hover:text-white"
+						className="relative z-20 px-4 py-2 border border-primary text-primary rounded transition-colors hover:bg-primary hover:text-white"
 					>
 						{loadingCartId === product.id ? (
 							<ReactLoading
@@ -44,6 +45,10 @@ const ProductCard = ({ product, onAddCart, loadingCartId }) => {
 					</button>
 				</div>
 			</div>
+			<Link
+				to={`/products/${product.id}`}
+				className="absolute inset-0 z-10"
+			></Link>
 		</div>
 	);
 };
