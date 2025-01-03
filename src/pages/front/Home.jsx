@@ -1,7 +1,61 @@
 import { Link } from "react-router-dom";
+import {
+	Leaf,
+	Utensils,
+	Brain,
+	Flower,
+	Heart,
+	Users,
+	Clock,
+	Shield,
+} from "lucide-react";
 
 const Home = () => {
-	const categories = ["飲食", "瑜伽", "靜坐", "內觀"];
+	const categories = [
+		{
+			name: "飲食",
+			icon: Utensils,
+			description: "探索健康飲食之道，培養良好的飲食習慣",
+		},
+		{
+			name: "瑜伽",
+			icon: Leaf,
+			description: "透過瑜伽體式跟呼吸，找回身心平衡",
+		},
+		{
+			name: "靜坐",
+			icon: Brain,
+			description: "沉澱心靈，培養專注力與覺察力",
+		},
+		{
+			name: "內觀",
+			icon: Flower,
+			description: "更深入探索內在，提升自我覺察",
+		},
+	];
+
+	const features = [
+		{
+			icon: Heart,
+			title: "專業師資",
+			description: "每位老師都經過嚴格培訓，擁有豐富的教學經驗與專業證照",
+		},
+		{
+			icon: Users,
+			title: "小班制教學",
+			description: "確保每位學員都能得到充分的關注與指導",
+		},
+		{
+			icon: Clock,
+			title: "彈性時段",
+			description: "提供多個時段選擇，讓您能輕鬆安排學習時間",
+		},
+		{
+			icon: Shield,
+			title: "安心保障",
+			description: "完整的保險規劃，讓您專注於課程學習",
+		},
+	];
 
 	return (
 		<>
@@ -31,21 +85,66 @@ const Home = () => {
 				</div>
 			</section>
 
-			<section className="py-16 bg-gray-50">
+			<section className="py-20 bg-gray-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-						探索課程類別
-					</h2>
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+					<div className="text-center max-w-2xl mx-auto mb-16">
+						<h2 className="text-3xl font-bold text-gray-900 mb-4">
+							探索課程類別
+						</h2>
+						<p className="text-lg text-gray-600">
+							選擇適合您的課程，開始心靈成長之旅！
+						</p>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{categories.map((category) => (
 							<Link
-								key={category}
-								to={`/products?category=${encodeURIComponent(category)}`}
-								className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center"
+								key={category.name}
+								to={`/products?category=${encodeURIComponent(category.name)}`}
+								className="group relative overflow-hidden rounded-2xl bg-white hover:bg-gray-50 transition-all duration-300 p-6 h-64 flex flex-col items-center justify-center text-center hover:shadow-lg hover:-translate-y-1"
 							>
-								<h3 className="text-xl font-semibold mb-2">{category}</h3>
-								<p className="text-gray-600">探索{category}相關課程</p>
+								<div className="mb-4 text-primary">
+									<category.icon size={48} strokeWidth={1.5} />
+								</div>
+								<h3 className="text-xl font-semibold text-gray-900 mb-2">
+									{category.name}
+								</h3>
+								<p className="text-gray-600 text-sm">{category.description}</p>
+								<div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+									<span className="text-primary font-medium">了解更多 →</span>
+								</div>
 							</Link>
+						))}
+					</div>
+				</div>
+			</section>
+
+			{/* Features Section */}
+			<section className="py-20 bg-white">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="text-center max-w-2xl mx-auto mb-16">
+						<h2 className="text-3xl font-bold text-gray-900 mb-4">
+							為什麼選擇我們？
+						</h2>
+						<p className="text-lg text-gray-600">
+							我們致力於提供最優質的學習體驗，讓每位學員都能在舒適安心的環境中成長
+						</p>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+						{features.map((feature) => (
+							<div
+								key={feature.title}
+								className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300"
+							>
+								<div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
+									<feature.icon size={24} />
+								</div>
+								<h3 className="text-lg font-semibold text-gray-900 mb-2">
+									{feature.title}
+								</h3>
+								<p className="text-gray-600 text-sm">{feature.description}</p>
+							</div>
 						))}
 					</div>
 				</div>

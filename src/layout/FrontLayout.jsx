@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const FrontLayout = () => {
 	return (
@@ -8,9 +9,7 @@ const FrontLayout = () => {
 			<main>
 				<Outlet />
 			</main>
-			<footer>
-				<p>© 2024 我的網站</p>
-			</footer>
+			<Footer />
 		</>
 	);
 };
