@@ -1,19 +1,23 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { apiAuth, authLogin } from "@/api/index.js";
 
 const Login = () => {
-	const [formData, setFormData] = useState({ username: "", password: "" });
 	const navigate = useNavigate();
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setFormData({ ...formData, [name]: value });
-	};
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			username: "",
+			password: "",
+		},
+		mode: "onTouched",
+	});
 
-	const signIn = async (event) => {
-		event.preventDefault();
+	const signIn = async (formData) => {
 		try {
 			const { token, expired } = await authLogin(formData);
 			const expiryDate = new Date(expired).toUTCString();
@@ -30,7 +34,7 @@ const Login = () => {
 			<div className="sm:mx-auto sm:w-full sm:max-w-md">
 				<div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 					<h2 className="text-center text-3xl title mb-8">請先登入</h2>
-					<form className="space-y-6" onSubmit={signIn}>
+					<form className="space-y-6" onSubmit={handleSubmit(signIn)}>
 						<div>
 							<label
 								htmlFor="username"
@@ -43,12 +47,28 @@ const Login = () => {
 									id="username"
 									name="username"
 									type="email"
-									value={formData.username}
-									onChange={handleChange}
+									{...register("username", {
+										required: {
+											value: true,
+											message: "請輸入 email",
+										},
+										pattern: {
+											value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+											message: "Email 格式不正確",
+										},
+									})}
 									autoComplete="email"
-									required
-									className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
+									className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary ${
+										errors.username
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
 								/>
+								{errors.username && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.username?.message}
+									</p>
+								)}
 							</div>
 						</div>
 
@@ -64,12 +84,24 @@ const Login = () => {
 									id="password"
 									name="password"
 									type="password"
-									value={formData.password}
-									onChange={handleChange}
+									{...register("password", {
+										required: {
+											value: true,
+											message: "請輸入密碼",
+										},
+									})}
 									autoComplete="current-password"
-									required
-									className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary"
+									className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary ${
+										errors.password
+											? "border-red-500 focus:ring-red-500 focus:border-red-500"
+											: ""
+									}`}
 								/>
+								{errors.password && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors?.password?.message}
+									</p>
+								)}
 							</div>
 						</div>
 
