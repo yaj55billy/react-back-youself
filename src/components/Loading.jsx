@@ -7,7 +7,7 @@ const Loading = () => {
 	return (
 		<>
 			{isLoading && (
-				<div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+				<div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
 					<ReactLoading type="spin" color="#fafafa" height={50} width={50} />
 				</div>
 			)}

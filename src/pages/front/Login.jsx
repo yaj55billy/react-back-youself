@@ -2,8 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { apiAuth, authLogin } from "@/api/index.js";
 
+import { useDispatch } from "react-redux";
+import { addAsyncMessageToast } from "@/slice/messageToastSlice";
+
 const Login = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const {
 		register,
@@ -19,13 +23,15 @@ const Login = () => {
 
 	const signIn = async (formData) => {
 		try {
-			const { token, expired } = await authLogin(formData);
+			const result = await authLogin(formData);
+			const { token, expired } = result;
+			dispatch(addAsyncMessageToast(result));
 			const expiryDate = new Date(expired).toUTCString();
 			document.cookie = `hexToken=${token};expires=${expiryDate};path=/;`;
 			apiAuth.defaults.headers.common.Authorization = `${token}`;
 			navigate("/admin/products");
-		} catch {
-			alert("登入失敗，請再檢查一下帳密唷");
+		} catch (error) {
+			dispatch(addAsyncMessageToast(error.response.data));
 		}
 	};
 

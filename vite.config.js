@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig(() => {
 	return {
-		base: "/react-back-youself-week6/", //react-back-youself-week4
+		base: "/react-back-youself-week7/",
 		plugins: [react()],
 		resolve: {
 			alias: {
